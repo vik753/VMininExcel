@@ -53,7 +53,7 @@ class Dom {
   }
 
   querySelector(selector) {
-    return this.$el.querySelector(selector);
+    return $(this.$el.querySelector(selector));
   }
 
   querySelectorAll(selector) {
@@ -62,6 +62,14 @@ class Dom {
 
   css(styles = {}) {
     Object.keys(styles).forEach((key) => (this.$el.style[key] = styles[key]));
+  }
+
+  addClass(className) {
+    return $(this.$el.classList.add(className));
+  }
+
+  removeClass(className) {
+    return $(this.$el.classList.remove(className));
   }
 }
 
