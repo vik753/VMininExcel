@@ -71,6 +71,24 @@ class Dom {
   removeClass(className) {
     return $(this.$el.classList.remove(className));
   }
+
+  dataId(parse) {
+    if (parse) {
+      const data = this.$el.dataset.id;
+      const parsed = data.split(':').map((el, index) => {
+        if (index === 0) {
+          return +el.charCodeAt(0);
+        } else {
+          return +el;
+        }
+      });
+      return {
+        col: parsed[0],
+        row: parsed[1],
+      };
+    }
+    return this.$el.dataset.id;
+  }
 }
 
 export function $(selector) {

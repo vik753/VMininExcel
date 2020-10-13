@@ -8,7 +8,10 @@ function toCell(colNumber, rowNumber, content = '') {
     <div 
       class="cell" 
       data-col="${colNumber}" 
-      data-id="${colNumber}:${rowNumber}" contenteditable>
+      data-id="${colNumber}:${rowNumber}"
+      data-select="cell"
+      contenteditable 
+    >
           ${content}
     </div>
   `;
