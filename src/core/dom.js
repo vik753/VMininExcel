@@ -89,6 +89,11 @@ class Dom {
     }
     return this.$el.dataset.id;
   }
+
+  focus() {
+    this.$el.focus();
+    return this;
+  }
 }
 
 export function $(selector) {

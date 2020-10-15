@@ -3,6 +3,7 @@ import { $ } from '@core/dom';
 import { createTable } from '@/components/table/table.template';
 import resizeHandler from '@/components/table/table.resize';
 import {
+  nextSelector,
   shouldResize,
   shouldSelected,
 } from '@/components/table/table.functions';
@@ -13,7 +14,7 @@ export class Table extends ExcelComponent {
   constructor($root) {
     super($root, {
       name: Table,
-      listeners: ['mousedown'],
+      listeners: ['mousedown', 'keydown'],
     });
   }
 
@@ -48,6 +49,26 @@ export class Table extends ExcelComponent {
       } else {
         this.selection.select($target);
       }
+    }
+  }
+
+  onKeydown(event) {
+    const keys = [
+      'ArrowRight',
+      'ArrowLeft',
+      'ArrowUp',
+      'ArrowDown',
+      'Enter',
+      'Tab',
+      'Home',
+    ];
+    const key = event.key;
+    if (keys.includes(key) && !event.shiftKey) {
+      event.preventDefault();
+      const currentId = this.selection.current.dataId(true);
+      const dataAtribute = nextSelector(key, currentId);
+      const $next = this.$root.querySelector(dataAtribute);
+      this.selection.select($next);
     }
   }
 }
