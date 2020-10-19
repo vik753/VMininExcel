@@ -13,5 +13,5 @@ excel.render();
 
 // Method to remove all eventListeners before window be closed
 window.addEventListener('beforeunload', (event) => {
-  excel.remove();
+  excel.destroy();
 });

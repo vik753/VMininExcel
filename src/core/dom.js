@@ -62,14 +62,17 @@ class Dom {
 
   css(styles = {}) {
     Object.keys(styles).forEach((key) => (this.$el.style[key] = styles[key]));
+    return this;
   }
 
   addClass(className) {
-    return $(this.$el.classList.add(className));
+    $(this.$el.classList.add(className));
+    return this;
   }
 
   removeClass(className) {
-    return $(this.$el.classList.remove(className));
+    $(this.$el.classList.remove(className));
+    return this;
   }
 
   dataId(parse) {
@@ -92,6 +95,14 @@ class Dom {
 
   focus() {
     this.$el.focus();
+    return this;
+  }
+
+  text(text) {
+    if (!text) {
+      return this.$el.textContent;
+    }
+    this.$el.textContent = text;
     return this;
   }
 }

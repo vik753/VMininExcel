@@ -11,10 +11,11 @@ import TableSelection from '@/components/table/TableSelection';
 import { matrix } from '@core/utils';
 
 export class Table extends ExcelComponent {
-  constructor($root) {
+  constructor($root, options) {
     super($root, {
       name: Table,
-      listeners: ['mousedown', 'keydown'],
+      listeners: ['mousedown', 'keydown', 'input', 'focusin'],
+      ...options,
     });
   }
 
@@ -33,6 +34,13 @@ export class Table extends ExcelComponent {
 
     const startSelect = this.$root.querySelector('[data-id="A:1"]');
     this.selection.select(startSelect);
+
+    this.$on('formula:input', (text) => {
+      this.selection.current.text(text);
+    });
+    this.$on('formula:enter', (event) => {
+      this.selection.select(this.selection.current);
+    });
   }
 
   onMousedown(event) {
@@ -66,9 +74,20 @@ export class Table extends ExcelComponent {
     if (keys.includes(key) && !event.shiftKey) {
       event.preventDefault();
       const currentId = this.selection.current.dataId(true);
-      const dataAtribute = nextSelector(key, currentId);
-      const $next = this.$root.querySelector(dataAtribute);
+      const dataAttribute = nextSelector(key, currentId);
+      const $next = this.$root.querySelector(dataAttribute);
       this.selection.select($next);
+      return true;
     }
+  }
+
+  onInput(event) {
+    if (!event.shiftKey && !event.ctrlKey && !event.altKey) {
+      this.$emit('table:input', $(event.target).text());
+    }
+  }
+
+  onFocusin(event) {
+    this.$emit('table:focusin', $(event.target).text());
   }
 }
