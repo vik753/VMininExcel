@@ -8,7 +8,10 @@ function toCell(colNumber, rowNumber, content = '') {
     <div 
       class="cell" 
       data-col="${colNumber}" 
-      data-row="${rowNumber}" contenteditable>
+      data-id="${colNumber}:${rowNumber}"
+      data-select="cell"
+      contenteditable 
+    >
           ${content}
     </div>
   `;
@@ -47,7 +50,10 @@ function createCells(colsCount, rowNumber) {
   // return new Array(colsCount).fill('').map(toCell).join('');
   return new Array(colsCount)
     .fill('')
-    .map((col, i) => toCell(toChar('', i), rowNumber))
+    .map((col, i) => {
+      const char = toChar('', i);
+      return toCell(char, rowNumber);
+    })
     .join('');
 }
 
@@ -59,9 +65,9 @@ export function createTable(rowsCount = 50) {
 
   rows.push(createRow('', titleCols));
 
-  for (let i = 0; i < rowsCount; i++) {
-    const cells = createCells(colsCount, i + 1);
-    rows.push(createRow(i + 1, cells));
+  for (let row = 0; row < rowsCount; row++) {
+    const cells = createCells(colsCount, row + 1);
+    rows.push(createRow(row + 1, cells));
   }
 
   return rows.join('');
