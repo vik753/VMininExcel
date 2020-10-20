@@ -9,6 +9,7 @@ import {
 } from '@/components/table/table.functions';
 import TableSelection from '@/components/table/TableSelection';
 import { matrix } from '@core/utils';
+import * as actions from '@/redux/actions';
 
 export class Table extends ExcelComponent {
   constructor($root, options) {
@@ -22,7 +23,7 @@ export class Table extends ExcelComponent {
   static className = 'excel__table';
 
   toHTML() {
-    return createTable();
+    return createTable(50);
   }
 
   prepare() {
@@ -41,11 +42,24 @@ export class Table extends ExcelComponent {
     this.$on('formula:enter', (event) => {
       this.selection.select(this.selection.current);
     });
+
+    this.$subscribe((state) => {
+      console.log('TableState', state);
+    });
+  }
+
+  async resizeTable(event) {
+    try {
+      const data = await resizeHandler(event, this.$root);
+      this.$dispatch(actions.tableResize(data));
+    } catch (err) {
+      console.warn('Resize ERROR: ', err.message);
+    }
   }
 
   onMousedown(event) {
     if (shouldResize(event)) {
-      resizeHandler(event, this.$root);
+      this.resizeTable(event);
     } else if (shouldSelected(event)) {
       const $target = $(event.target);
       if (event.shiftKey) {

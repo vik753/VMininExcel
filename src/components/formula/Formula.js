@@ -17,6 +17,10 @@ export class Formula extends ExcelComponent {
 
     this.$on('table:input', (text) => $input.text(text));
     this.$on('table:focusin', (text) => $input.text(text));
+
+    this.$subscribe((state) => {
+      console.log('FormulaState', state);
+    });
   }
 
   toHTML() {

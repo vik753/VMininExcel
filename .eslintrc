@@ -10,7 +10,8 @@
     "object-curly-spacing": "off",
     "indent": "off",
     "operator-linebreak": "off",
-    "arrow-parens": "off"
+    "arrow-parens": "off",
+    "linebreak-style": "off"
   },
   "extends": ["eslint:recommended", "google"]
 }
