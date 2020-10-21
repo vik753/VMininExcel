@@ -2,6 +2,14 @@ export function shouldResize(event) {
   return event.target.dataset.resize;
 }
 
+export function shouldDefaultResizeCol(event) {
+  return event.target.dataset.resize === 'col';
+}
+
+export function shouldDefaultResizeRow(event) {
+  return event.target.dataset.resize === 'row';
+}
+
 export function shouldSelected(event) {
   return event.target.dataset.select;
 }

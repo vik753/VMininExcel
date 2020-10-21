@@ -1,6 +1,17 @@
 import { $ } from '@core/dom';
 
-const resizeHandler = (event, $root) => {
+export const resizeColDefault = (colName, $title, $root) => {
+  $title.css({ width: '120px' });
+  const colCells = $root.querySelectorAll(`[data-col=${colName}]`);
+  colCells.forEach((col) => $(col).css({ width: '120px' }));
+};
+
+export const resizeDefaultRow = (event) => {
+  const row = $(event.target.parentNode.parentNode);
+  row.css({ height: '24px' });
+};
+
+export const resizeHandler = (event, $root) => {
   return new Promise((resolve) => {
     event.target.style.opacity = '1';
 
@@ -59,9 +70,12 @@ const resizeHandler = (event, $root) => {
         });
       }
 
+      const rowId =
+        resizeType === 'row' && event.target.parentNode.textContent.trim();
       resolve({
         value,
-        id: (resizeType === 'col' ? $parent.innerText : null),
+        resizeType,
+        id: resizeType === 'col' ? $parent.innerText : rowId,
       });
 
       $root.css({ cursor: '' });
@@ -71,5 +85,3 @@ const resizeHandler = (event, $root) => {
     };
   });
 };
-
-export default resizeHandler;

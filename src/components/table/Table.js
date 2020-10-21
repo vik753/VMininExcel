@@ -1,9 +1,15 @@
 import { ExcelComponent } from '@core/ExcelComponent';
 import { $ } from '@core/dom';
 import { createTable } from '@/components/table/table.template';
-import resizeHandler from '@/components/table/table.resize';
+import {
+  resizeColDefault,
+  resizeDefaultRow,
+  resizeHandler,
+} from '@/components/table/table.resize';
 import {
   nextSelector,
+  shouldDefaultResizeCol,
+  shouldDefaultResizeRow,
   shouldResize,
   shouldSelected,
 } from '@/components/table/table.functions';
@@ -15,7 +21,7 @@ export class Table extends ExcelComponent {
   constructor($root, options) {
     super($root, {
       name: Table,
-      listeners: ['mousedown', 'keydown', 'input', 'focusin'],
+      listeners: ['mousedown', 'keydown', 'input', 'focusin', 'dblclick'],
       ...options,
     });
   }
@@ -23,7 +29,7 @@ export class Table extends ExcelComponent {
   static className = 'excel__table';
 
   toHTML() {
-    return createTable(50);
+    return createTable(50, this.store.getState());
   }
 
   prepare() {
@@ -51,7 +57,14 @@ export class Table extends ExcelComponent {
   async resizeTable(event) {
     try {
       const data = await resizeHandler(event, this.$root);
-      this.$dispatch(actions.tableResize(data));
+      console.log(data);
+      if (!data.value) return;
+      if (data.resizeType === 'col') {
+        this.$dispatch(actions.colResize(data));
+      } else if (data.resizeType === 'row') {
+        this.$dispatch(actions.rowResize(data));
+        console.log(data);
+      }
     } catch (err) {
       console.warn('Resize ERROR: ', err.message);
     }
@@ -92,6 +105,19 @@ export class Table extends ExcelComponent {
       const $next = this.$root.querySelector(dataAttribute);
       this.selection.select($next);
       return true;
+    }
+  }
+
+  onDblclick(event) {
+    if (shouldDefaultResizeCol(event)) {
+      const colName = $(event.target.parentNode).text().trim();
+      resizeColDefault(colName, $(event.target.parentNode), this.$root);
+      const data = { id: colName };
+      this.$dispatch(actions.colDefaultResize(data));
+    } else if (shouldDefaultResizeRow(event)) {
+      resizeDefaultRow(event);
+      const rowNumber = event.target.parentNode.textContent.trim();
+      this.$dispatch(actions.rowDefaultResize({ rowNumber }));
     }
   }
 
