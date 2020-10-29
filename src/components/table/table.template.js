@@ -33,6 +33,7 @@ function toColumn(col, colSize) {
   return `
     <div class="column" 
        data-type="resizable" 
+       data-id="col-${col}"
        style = "width: ${colSize}px;"
     >
           ${col}
@@ -44,7 +45,7 @@ function toColumn(col, colSize) {
 function createRow(index, content, rowHeight) {
   return `
     <div class="row" data-type="resizable" style="height: ${rowHeight}px">
-        <div class="row-info" data-info="row-info">
+        <div class="row-info" data-info="row-info" data-id="row-${index || 0}">
             ${index && index}
             ${index && '<div class="row-resize" data-resize="row"></div>'}
         </div>
@@ -67,18 +68,19 @@ function createTitleRow(colsCount, colState = {}) {
     .join('');
 }
 
-function createCells(colsCount, rowNumber, colState = {}, content = '') {
+function createCells(colsCount, rowNumber, colState = {}, dataState = {}) {
   return new Array(colsCount)
     .fill('')
     .map((col, i) => {
       const char = toChar('', i);
+      const content = dataState[`${char}:${rowNumber}`];
       return toCell(char, rowNumber, colState[char], content);
     })
     .join('');
 }
 
 export function createTable(rowsCount = 50, store = {}) {
-  const { colState = {}, rowState = {} } = store;
+  const { colState, rowState, dataState } = store;
   const colsCount = CODES.Z - CODES.A + 1;
   const rows = [];
 
@@ -87,9 +89,9 @@ export function createTable(rowsCount = 50, store = {}) {
   rows.push(createRow('', titleCols));
 
   for (let row = 0; row < rowsCount; row++) {
-    const cells = createCells(colsCount, row + 1, colState);
+    const cells = createCells(colsCount, row + 1, colState, dataState);
     const rowHeight = rowState[row + 1] || DEFAULT_SIZES.row;
-    rows.push(createRow(row + 1, cells, rowHeight ));
+    rows.push(createRow(row + 1, cells, rowHeight));
   }
 
   return rows.join('');

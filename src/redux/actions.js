@@ -1,34 +1,29 @@
-import {
-  COL_DEF_RESIZE,
-  COL_RESIZE,
-  ROW_DEF_RESIZE,
-  ROW_RESIZE,
-} from '@/redux/types';
+import { RESIZE, DEF_RESIZE, CHANGE_TEXT, CHANGE_FOCUS } from '@/redux/types';
 
-export function colResize(data) {
+export function resize(data) {
   return {
-    type: COL_RESIZE,
+    type: RESIZE,
     data,
   };
 }
 
-export function rowResize(data) {
+export function defaultResize(data) {
   return {
-    type: ROW_RESIZE,
+    type: DEF_RESIZE,
     data,
   };
 }
 
-export function colDefaultResize(data) {
+export function changeText(data) {
   return {
-    type: COL_DEF_RESIZE,
+    type: CHANGE_TEXT,
     data,
   };
 }
 
-export function rowDefaultResize(data) {
+export function changeFocus(data) {
   return {
-    type: ROW_DEF_RESIZE,
+    type: CHANGE_FOCUS,
     data,
   };
 }

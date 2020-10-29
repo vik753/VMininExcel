@@ -1,4 +1,4 @@
-export const COL_RESIZE = 'COL_RESIZE';
-export const ROW_RESIZE = 'ROW_RESIZE';
-export const COL_DEF_RESIZE = 'COL_DEF_RESIZE';
-export const ROW_DEF_RESIZE = 'ROW_DEF_RESIZE';
+export const RESIZE = 'RESIZE';
+export const DEF_RESIZE = 'DEF_RESIZE';
+export const CHANGE_TEXT = 'CHANGE_TEXT';
+export const CHANGE_FOCUS = 'CHANGE_FOCUS';

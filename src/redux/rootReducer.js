@@ -1,40 +1,40 @@
-import {
-  COL_DEF_RESIZE,
-  COL_RESIZE,
-  ROW_DEF_RESIZE,
-  ROW_RESIZE,
-} from '@/redux/types';
+import { CHANGE_FOCUS, CHANGE_TEXT, DEF_RESIZE, RESIZE } from '@/redux/types';
 
 export function rootReducer(state, action) {
+  const resizeType = action.data ? action.data.resizeType : {};
+  const stateType = action.data
+    ? resizeType === 'col'
+      ? 'colState'
+      : 'rowState'
+    : {};
   let tempData;
+
+  console.log('Action', action);
+
   switch (action.type) {
-    case COL_RESIZE:
-      tempData = state.colState || {};
+    case RESIZE:
+      tempData = state[stateType] || {};
       tempData[action.data.id] = action.data.value;
-      return { ...state, colState: tempData };
-    case ROW_RESIZE:
-      tempData = state.rowState || {};
-      tempData[action.data.id] = action.data.value;
-      return { ...state, rowState: tempData };
-    case COL_DEF_RESIZE:
-      tempData = state.colState || {};
-      // delete tempData[action.data.id];
-      tempData = Object.entries(tempData).reduce((acc, cur) => {
-        if (cur[0] !== action.data.id) {
-          acc[cur[0]] = cur[1];
+      return { ...state, [stateType]: tempData };
+    case DEF_RESIZE:
+      tempData = state[stateType] || {};
+      tempData = Object.entries(tempData).reduce((acc, curr) => {
+        if (curr[0] !== action.data.id) {
+          acc[curr[0]] = curr[1];
         }
         return acc;
       }, {});
-      return { ...state, colState: tempData };
-    case ROW_DEF_RESIZE:
-      tempData = state.rowState || {};
-      tempData = Object.entries(tempData).reduce((acc, cur) => {
-        if (cur[0] !== action.data.rowNumber) {
-          acc[cur[0]] = cur[1];
-        }
-        return acc;
-      }, {});
-      return { ...state, rowState: tempData };
+      return { ...state, [stateType]: tempData };
+    case CHANGE_TEXT:
+      tempData = state['dataState'] || {};
+      tempData[action.data.id] = action.data.value;
+      if (!action.data.value) {
+        delete tempData[action.data.id];
+      }
+      return { ...state, currentText: action.data.value, dataState: tempData };
+    case CHANGE_FOCUS:
+      tempData = state['dataState'] || {};
+      return { ...state, currentText: tempData[action.data.id] || '' };
     default:
       return state;
   }

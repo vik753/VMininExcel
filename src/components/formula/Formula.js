@@ -7,20 +7,21 @@ export class Formula extends ExcelComponent {
     super($root, {
       name: 'Formula',
       listeners: ['input', 'keydown'],
+      subscribe: ['currentText'],
       ...options,
     });
   }
 
   init() {
     super.init();
-    const $input = this.$root.querySelector(`[data-type="input"]`);
-
-    this.$on('table:input', (text) => $input.text(text));
-    this.$on('table:focusin', (text) => $input.text(text));
-
-    this.$subscribe((state) => {
-      console.log('FormulaState', state);
+    this.$formula = this.$root.querySelector(`[data-type="input"]`);
+    this.$on('table:focusin', (text) => {
+      this.$formula.text(text);
     });
+  }
+
+  storeChanged({ currentText }) {
+    this.$formula.text(currentText);
   }
 
   toHTML() {

@@ -93,6 +93,10 @@ class Dom {
     return this.$el.dataset.id;
   }
 
+  data() {
+    return this.$el.dataset;
+  }
+
   focus() {
     this.$el.focus();
     return this;
@@ -102,7 +106,7 @@ class Dom {
     if (!text) {
       return this.$el.textContent;
     }
-    this.$el.textContent = text;
+    this.$el.textContent = text.trim();
     return this;
   }
 }
